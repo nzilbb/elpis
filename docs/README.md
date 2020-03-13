@@ -363,7 +363,7 @@ Get the current status of a model being trained.
 ```json
 {
   "data": {
-    "status": "training"  [or "trained"]
+    "status": "training"
   }, 
   "status": 200
 }
