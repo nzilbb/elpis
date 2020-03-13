@@ -20,7 +20,7 @@ The following are the current Elpis API functions:
 
 ## dataset
 
-## api/dataset/new
+### api/dataset/new
 
 Create a new dataset - i.e. a collection of uploaded recordings/transcripts for training
 models on.
@@ -29,7 +29,7 @@ models on.
 
 **body:** JSON object with the following attributes:
 
- - **name** (string): the name of the new dataset
+ - **name** (string): The name of the new dataset.
 
 **response:** A JSON object something like:  
 ```json
@@ -49,7 +49,7 @@ models on.
 }
 ```
 
-## api/dataset/list
+### api/dataset/list
 
 List current datasets.
 
@@ -70,7 +70,7 @@ List current datasets.
 
 The "list" property is a list of datasets.
 
-## api/dataset/load
+### api/dataset/load
 
 Start using an existing dataset.
 
@@ -78,7 +78,7 @@ Start using an existing dataset.
 
 **body:** JSON object with the following attributes:
 
- - **name** (string): the name of the existing dataset
+ - **name** (string): The name of the existing dataset.
 
 **response:** A JSON object something like:  
 ```json
@@ -133,7 +133,7 @@ Upload transcript/audio files into the dataset.
 **method:** POST with Content-Type: multipart/form-data
 **parameters:**
 
- - **file** (file) : the file to upload (this parameter may be repeated), which may be a
+ - **file** (file) : The file to upload (this parameter may be repeated), which may be a
      wav audio file or an ELAN .eaf transcript.
 
 Training requires pairs of audio/transcript (.wav/.eaf) files.
@@ -181,8 +181,8 @@ Create a new pronunciation dictionary.
 
 **body:** JSON object with the following attributes:
 
- - **name** (string) : the name of the pronunciation dictionary
- - **dataset_name** (string) : the name of the dataset
+ - **name** (string) : The name of the new pronunciation dictionary.
+ - **dataset_name** (string) : The name of the dataset.
 
 **response:** A JSON object something like:  
 ```json
@@ -235,7 +235,7 @@ Specify the letter-to-sound mapping for creating a pronunciation dictionary.
 **method:** POST with Content-Type: multipart/form-data
 **parameters:**
 
- - **file** (file) : the plain-text file to upload
+ - **file** (file) : The plain-text file to upload.
 
 The letter to sound file is used to build a pronunciation dictionary for the corpus. Make
 one by listing one column of all the characters in your corpus. Make a second column
@@ -401,7 +401,7 @@ Start using an existing model.
 
 **body:** JSON object with the following attributes:
 
- - **name** (string) : The name of the model to create.
+ - **name** (string) : The name of the existing model to use.
 
 **response:** A JSON object something like:  
 ```json
@@ -431,7 +431,7 @@ Specify model configuration.
 **body:** JSON object with the following attributes:
 
  - **ngram** (string) : The n-gram setting (number of consecutive words to use) for the
-     language model 
+     language model. 
 
 **response:** A JSON object something like:  
 ```json
@@ -513,7 +513,7 @@ Upload an audio file to transcribe.
 **method:** POST with Content-Type: multipart/form-data
 **parameters:**
 
- - **file** (file) : the wav audio file to upload
+ - **file** (file) : The wav audio file to upload.
 
 **response:** A JSON object something like:  
 ```json
@@ -528,7 +528,7 @@ Upload an audio file to transcribe.
 
 ### api/transcription/transcribe
 
-Begin the transcription process.
+Begin the transcription process, with the last recording uploaded using *api/transcription/new*.
 
 **method:** GET
 
@@ -580,3 +580,13 @@ Get the ELAN (.eaf) XML version of the transcript.
 
 **response:** The ELAN (.eaf) transcription, which has a tier that includes an aligned
   annotation for each word token.
+
+## config
+
+### config/reset
+
+Reset the server - delete all uploads, datasets, pronunciation maps, etc.
+
+**method:** POST
+
+**response:** none
