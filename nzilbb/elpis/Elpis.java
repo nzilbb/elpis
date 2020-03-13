@@ -7,16 +7,16 @@ package nzilbb.elpis;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.util.List;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
-import javax.json.JsonArray;
 import javax.json.JsonString;
 import nzilbb.elpis.http.*;
 

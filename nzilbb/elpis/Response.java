@@ -5,17 +5,17 @@
 //
 package nzilbb.elpis;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedReader;
-import java.nio.charset.StandardCharsets;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Vector;
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonException;
+import javax.json.JsonObject;
 import javax.json.stream.JsonParsingException;
 
 /**
