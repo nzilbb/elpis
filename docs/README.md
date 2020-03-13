@@ -3,6 +3,19 @@
 The Elpis API currently supports only single-session use - i.e. using multiple datasets or
 transcribing multippe sound files simultaneously is not supported.
 
+All server responses are JSON objects of the form:
+```json
+{
+  "data": {
+    ...request specific response data...
+    }
+  }, 
+  "status": 200
+}
+```
+
+The "status" attribute is the same as, and has the same semantics as, the HTTP response status.
+
 The following are the current Elpis API functions:
 
 ## dataset
