@@ -115,6 +115,18 @@ public class HttpRequestPost {
    }
    
    /**
+    * Creates a new  POST HTTP request for a specified URL
+    *
+    * @param url the URL to send request to
+    * @throws IOException
+    */
+   public HttpRequestPost(URL url) throws IOException {
+      
+      this((HttpURLConnection)url.openConnection(), null);
+      this.url = url.toString();
+   }
+   
+   /**
     * Creates a new POST HTTP request for a specified URL string
     *
     * @param urlString the string representation of the URL to send request to
@@ -265,8 +277,8 @@ public class HttpRequestPost {
     * @throws IOException
     */
    public HttpURLConnection post() throws IOException {
-      
-      os.close();
+
+      if (os != null) os.close();
       return connection;
    }
    

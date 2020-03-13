@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.json.Json;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonArray;
 import javax.json.JsonString;
@@ -180,7 +183,17 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public Map<String,Integer> datasetPrepare() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("dataset/prepare"))
+         .setHeader("Accept", "dataset/prepare");
+      if (verbose) System.out.println("datasetPrepare -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ResponseException on error
+      String wordlistString = response.getData().getString("wordlist");
+      JsonObject wordlistJson = Json.createReader(new StringReader(wordlistString)).readObject();
+      return wordlistJson.entrySet().stream()
+         .collect(Collectors.toMap(Map.Entry::getKey,
+                                   e -> Integer.valueOf(((JsonNumber)e.getValue()).intValue())));
    } // end of datasetPrepare()
 
    // pron-dict functions
@@ -216,7 +229,7 @@ public class Elpis {
       HttpRequestGet request = new HttpRequestGet(
          makeUrl("pron-dict/list"))
          .setHeader("Accept", "application/json");
-      if (verbose) System.out.println("datasetList -> " + request);
+      if (verbose) System.out.println("pronDictList -> " + request);
       response = new Response(request.get(), verbose);
       response.checkForErrors(); // throws a ResponseException on error
       JsonArray list = response.getData().getJsonArray("list");
@@ -282,7 +295,7 @@ public class Elpis {
       HttpRequestGet request = new HttpRequestGet(
          makeUrl("model/list"))
          .setHeader("Accept", "application/json");
-      if (verbose) System.out.println("datasetList -> " + request);
+      if (verbose) System.out.println("modelList -> " + request);
       response = new Response(request.get(), verbose);
       response.checkForErrors(); // throws a ResponseException on error
       JsonArray list = response.getData().getJsonArray("list");
