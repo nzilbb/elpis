@@ -13,7 +13,18 @@ package nzilbb.elpis;
 public class ElpisException extends Exception {
    
    // Attributes:
-   
+
+   /**
+    * The response.
+    * @see #getResponse()
+    */
+   protected Response response;
+   /**
+    * Getter for {@link #response}: The response.
+    * @return The response.
+    */
+   public Response getResponse() { return response; }
+
    // Methods:
    
    /**
@@ -38,4 +49,33 @@ public class ElpisException extends Exception {
       super(cause);
    } // end of constructor
    
+   /**
+    * Constructor from failure response.
+    * @param response The response.
+    */
+   public ElpisException(Response response) {
+      super(GenerateMessage(response));
+      this.response = response;      
+   } // end of constructor
+
+   /**
+    * Generates the exception message.
+    * @param response
+    * @return The message.
+    */
+   static private String GenerateMessage(Response response) {
+      
+      if (response.getStatus() != 200) {
+         if (response.getMessage() != null) {
+            return response.getMessage() + " ("+response.getMessage()+")";
+         } else {         
+            return "Status " + response.getStatus();
+         }
+      }
+      if (response.getHttpStatus() > 0) {
+         return "HTTP status " + response.getHttpStatus();
+      }
+      return null;
+   } // end of generateMessage()
+
 } // end of class ElpisException
