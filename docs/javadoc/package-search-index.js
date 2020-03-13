@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"nzilbb.elpis"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"nzilbb.elpis"},{"l":"nzilbb.elpis.http"},{"l":"nzilbb.elpis.util"}]
