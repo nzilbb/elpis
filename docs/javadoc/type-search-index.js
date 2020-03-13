@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"nzilbb.elpis","l":"Elpis"},{"p":"nzilbb.elpis","l":"ElpisException"}]
