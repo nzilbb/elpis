@@ -41,6 +41,8 @@ public class CommandLine {
                elpis.pronDictList();
             } else if (argv[1].equalsIgnoreCase("modelList")){
                elpis.modelList();
+            } else if (argv[1].equalsIgnoreCase("datasetPrepare")){
+               elpis.datasetPrepare();
             } else {
                System.err.println("Invalid function: " + argv[1]);
                printUsage(null);
