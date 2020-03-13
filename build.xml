@@ -56,11 +56,11 @@
   <target name="javadoc" depends="init,dist" description="Document the source" >
     <javadoc destdir="${javadoc}"
              classpath=""
-             packagenames="nzilbb.elpis nzilbb.elpis.http nzilbb.elpis.util"
+             packagenames="nzilbb.elpis nzilbb.elpis.util"
              access="public"
 	     Author="yes"
              Windowtitle="nzilbb.elpis"
-             Overview="nzilbb/labbcat/overview.html"
+             Overview="nzilbb/elpis/overview.html"
              stylesheetfile="doc-files/style.css"
              noqualifier="all"
              bottom="&lt;i&gt;&amp;copy; NZILBB - ${TODAY}&lt;/i&gt;"
