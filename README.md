@@ -3,6 +3,10 @@
 Java client library for programmatically accessing functions of the
 [Elpis](https://elpis.net.au/) transcription acceleration system.
 
+## Documentation
+
+Detailed is available [here](https://nzilbb.github.io/elpis-java/)
+
 ## Build targets
 
 - `ant` - builds the `bin/nzilbb.elpis.jar` library
