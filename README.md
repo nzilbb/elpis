@@ -5,7 +5,7 @@ Java client library for programmatically accessing functions of the
 
 ## Documentation
 
-Detailed is available [here](https://nzilbb.github.io/elpis-java/)
+Detailed API documentation is available [here](https://nzilbb.github.io/elpis-java/)
 
 ## Build targets
 
