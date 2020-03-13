@@ -1,5 +1,8 @@
 # Elpis API
 
+The Elpis API currently supports only single-session use - i.e. using multiple datasets or
+transcribing multippe sound files simultaneously is not supported.
+
 The following are the current Elpis API functions:
 
 ## dataset
@@ -53,6 +56,42 @@ List current datasets.
 ```
 
 The "list" property is a list of datasets.
+
+## api/dataset/load
+
+Start using an existing dataset.
+
+**method:** POST
+
+**body:** JSON object with the following attributes:
+
+ - **name** (string): the name of the existing dataset
+
+**response:** A JSON object something like:  
+```json
+{
+  "data": {
+    "config": {
+      "date": "1584105467.128971", 
+      "files": [
+        "1_1_1.eaf", 
+        "1_1_1.wav", 
+        "1_1_2.eaf", 
+        "1_1_2.wav", 
+        "1_1_3.eaf", 
+        "1_1_3.wav", 
+        "1_1_4.eaf", 
+        "1_1_4.wav"
+      ], 
+      "has_been_processed": true, 
+      "hash": "5eae8c85d1fe086996619db7b5cb4985", 
+      "logger": 0, 
+      "name": "ds", 
+      "tier": "Phrase"
+    }
+  }, 
+  "status": 200
+}```
 
 ### api/dataset/settings
 
@@ -123,7 +162,7 @@ their frequencies in the uploaded transcripts.
 
 ### api/pron-dict/new
 
-Create a new pronuciation dictionary.
+Create a new pronunciation dictionary.
 
 **method:** POST
 
@@ -131,6 +170,33 @@ Create a new pronuciation dictionary.
 
  - **name** (string) : the name of the pronunciation dictionary
  - **dataset_name** (string) : the name of the dataset
+
+**response:** A JSON object something like:  
+```json
+{
+  "data": {
+    "config": {
+      "dataset_name": "ds", 
+      "date": "1584103964.921259", 
+      "hash": "ac5e6d899088a16cdb563b9a358f6749", 
+      "l2s": null, 
+      "logger": null, 
+      "name": "pd"
+    }
+  }, 
+  "status": 200
+}
+```
+
+### api/pron-dict/load
+
+Start using an existing pronunciation dictionary.
+
+**method:** POST
+
+**body:** JSON object with the following attributes:
+
+ - **name** (string) : the name of the pronunciation dictionary
 
 **response:** A JSON object something like:  
 ```json
@@ -294,6 +360,35 @@ Create a new model for training.
 
  - **name** (string) : The name of the model to create.
  - **pron_dict_name** (string) : The pronunciation dictionary to use.
+
+**response:** A JSON object something like:  
+```json
+{
+  "data": {
+    "config": {
+      "dataset_name": "ds", 
+      "date": "1584104595.007796", 
+      "hash": "4be5606021330613a773244921fd91bd", 
+      "logger": null, 
+      "name": "m", 
+      "ngram": 1, 
+      "pron_dict_name": "pd", 
+      "status": "untrained"
+    }
+  }, 
+  "status": 200
+}
+```
+
+### api/model/load
+
+Start using an existing model.
+
+**method:** POST
+
+**body:** JSON object with the following attributes:
+
+ - **name** (string) : The name of the model to create.
 
 **response:** A JSON object something like:  
 ```json
