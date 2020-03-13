@@ -1,7 +1,7 @@
 # Elpis API
 
 The Elpis API currently supports only single-session use - i.e. using multiple datasets or
-transcribing multippe sound files simultaneously is not supported.
+transcribing multiple sound files simultaneously is not supported.
 
 All server responses are JSON objects of the form:
 ```json
@@ -136,7 +136,7 @@ Upload transcript/audio files into the dataset.
  - **file** (file) : the file to upload (this parameter may be repeated), which may be a
      wav audio file or an ELAN .eaf transcript.
 
-Training requires pairs of audio/transctipt (.wav/.eaf) files.
+Training requires pairs of audio/transcript (.wav/.eaf) files.
 
 **response:** A JSON object something like:  
 ```json
@@ -239,7 +239,7 @@ Specify the letter-to-sound mapping for creating a pronunciation dictionary.
 
 The letter to sound file is used to build a pronunciation dictionary for the corpus. Make
 one by listing one column of all the characters in your corpus. Make a second column
-(separated by a space) of a symbol representing how that characted is pronounced. You can
+(separated by a space) of a symbol representing how that character is pronounced. You can
 use IPA, or SAMPA for the pronunciation symbols. You can include comments in this file by
 beginning the comment line with #. For example:  
 
@@ -300,7 +300,7 @@ Requirements:
 
  - The lexicon content must end with a blank line.
  - The pronunciations are specified as space-separated phoneme symbols.
- - The pronuncations must use only phoneme symbols that were already specified in the
+ - The pronunciations must use only phoneme symbols that were already specified in the
     letter-to-sound mapping uploaded to *api/pron-dict/l2s*
 
 **response:** A JSON object something like:  
@@ -317,7 +317,7 @@ The "lexicon" attribute is a copy of what was send in the request body.
 
 ### api/pron-dict/list
 
-List the current pronuncation dictionaries.
+List the current pronunciation dictionaries.
 
 **method:** GET
 
