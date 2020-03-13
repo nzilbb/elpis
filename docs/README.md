@@ -1,6 +1,6 @@
 # Elpis API
 
-The following are the current
+The following are the current Elpis API functions:
 
 ## dataset
 
