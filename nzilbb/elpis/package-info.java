@@ -13,7 +13,8 @@
  *   to upload training data, initiate model training, and provide recordings for
  *   automatic transcription.</p>
  *
- * <p>This GUI uses an API which is documented <a href="README.md">here</a>.</p>
+ * <p>This GUI uses an API which is documented
+ * <a href="https://github.com/nzilbb/elpis-java/blob/master/docs/README.md">here</a>.</p>
  *     
  * <h2>What is this library?</h2>
  *    
