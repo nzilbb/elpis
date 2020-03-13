@@ -1,2 +1,6 @@
-# elpis
-Java client library for Elpis transcription acceleration system
+# elpis-java
+
+Java client library for programmatically accessing functions of the
+[Elpis](https://elpis.net.au/) transcription acceleration system. 
+
+
