@@ -140,7 +140,7 @@ public class Elpis {
          .setHeader("Accept", "application/json");
       if (verbose) System.out.println("datasetList -> " + request);
       response = new Response(request.get(), verbose);
-      response.checkForErrors(); // throws a ResponseException on error
+      response.checkForErrors(); // throws a ElpisException on error
       JsonArray list = response.getData().getJsonArray("list");
       return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
    } // end of datasetList()
@@ -188,7 +188,7 @@ public class Elpis {
          .setHeader("Accept", "dataset/prepare");
       if (verbose) System.out.println("datasetPrepare -> " + request);
       response = new Response(request.post(), verbose);
-      response.checkForErrors(); // throws a ResponseException on error
+      response.checkForErrors(); // throws a ElpisException on error
       String wordlistString = response.getData().getString("wordlist");
       JsonObject wordlistJson = Json.createReader(new StringReader(wordlistString)).readObject();
       return wordlistJson.entrySet().stream()
@@ -231,7 +231,7 @@ public class Elpis {
          .setHeader("Accept", "application/json");
       if (verbose) System.out.println("pronDictList -> " + request);
       response = new Response(request.get(), verbose);
-      response.checkForErrors(); // throws a ResponseException on error
+      response.checkForErrors(); // throws a ElpisException on error
       JsonArray list = response.getData().getJsonArray("list");
       return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
    } // end of pronDictList()
@@ -297,7 +297,7 @@ public class Elpis {
          .setHeader("Accept", "application/json");
       if (verbose) System.out.println("modelList -> " + request);
       response = new Response(request.get(), verbose);
-      response.checkForErrors(); // throws a ResponseException on error
+      response.checkForErrors(); // throws a ElpisException on error
       JsonArray list = response.getData().getJsonArray("list");
       return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
    } // end of modelList()
@@ -352,7 +352,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public String modelStatus() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestGet request = new HttpRequestGet(
+         makeUrl("model/status"))
+         .setHeader("Accept", "application/json");
+      if (verbose) System.out.println("modelStatus -> " + request);
+      response = new Response(request.get(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
+      return response.getData().getString("status");
    } // end of modelStatus()
    
    /**
@@ -386,7 +392,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public String transcriptionTranscribe() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestGet request = new HttpRequestGet(
+         makeUrl("transcription/transcribe"))
+         .setHeader("Accept", "application/json");
+      if (verbose) System.out.println("transcriptionTranscribe -> " + request);
+      response = new Response(request.get(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
+      return response.getData().getString("status");
    } // end of transcriptionNew()
    
    /**
@@ -397,7 +409,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public String transcriptionStatus() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestGet request = new HttpRequestGet(
+         makeUrl("transcription/status"))
+         .setHeader("Accept", "application/json");
+      if (verbose) System.out.println("transcriptionStatus -> " + request);
+      response = new Response(request.get(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
+      return response.getData().getString("status");
    } // end of transcriptionStatus()
 
    /**
@@ -432,7 +450,12 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void configReset() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("config/reset"))
+         .setHeader("Accept", "dataset/prepare");
+      if (verbose) System.out.println("datasetPrepare -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of configReset()
 
 } // end of class Elpis
