@@ -14,7 +14,9 @@ figure img {
 /* Wide display */
 @media all and (min-width: 640px) {
     html, body {
-        margin: 5mm;
+        margin: auto;
+        max-width: 800px;
+        width: 80vw;
     }
     figure {
         margin: 10mm;
