@@ -23,7 +23,7 @@
     <javac srcdir="${src}" destdir="${build}"
 	   includes="${srcfiles}"
 	   excludes="${testsrcfiles} **/package-info.java"
-	   classpath="${lib}/nzilbb.ag.jar"
+	   classpath="${lib}/javax.json.jar"
 	   listfiles="yes"
 	   target="${config.classversion}"
 	   source="${config.classversion}"
@@ -44,6 +44,7 @@
 	<attribute name="Application-Name" value="Elpis Command Line Interface"/>
 	<attribute name="Permissions" value="all-permissions"/>
 	<attribute name="Main-Class" value="nzilbb.elpis.util.CommandLine"/>
+	<attribute name="Class-Path" value="../lib/javax.json.jar javax.json.jar"/>
       </manifest>
       <!-- include source code -->
       <fileset dir="${src}" includes="${srcfiles}" />
@@ -55,7 +56,7 @@
   
   <target name="javadoc" depends="init,dist" description="Document the source" >
     <javadoc destdir="${javadoc}"
-             classpath=""
+             classpath="${lib}/javax.json.jar"
              packagenames="nzilbb.elpis nzilbb.elpis.util"
              access="public"
 	     Author="yes"
@@ -72,7 +73,7 @@
   <target name="test" depends="dist" description="Run nzilbb.labbcat.server unit tests">
     <javac srcdir="${src}" destdir="."
 	   includes="${testsrcfiles}"
-	   classpath=".;${config.junitjar};${dist}/${ant.project.name}.jar"
+	   classpath=".;${config.junitjar};${dist}/${ant.project.name}.jar;${lib}/javax.json.jar"
 	   listfiles="yes"
 	   target="${config.classversion}"
 	   source="${config.classversion}"
@@ -82,7 +83,7 @@
     </javac>
     <junit haltonfailure="true" fork="true" >
       <classpath>
-	<pathelement path=".;${dist}/${ant.project.name}.jar;${config.junitjar};${lib}/antlr-runtime-4.7.2.jar"/>
+	<pathelement path=".;${dist}/${ant.project.name}.jar;${config.junitjar};${lib}/javax.json.jar"/>
       </classpath>
       <jvmarg value="-ea"/>
       <formatter type="plain" usefile="false" />
