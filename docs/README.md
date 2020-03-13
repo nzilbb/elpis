@@ -4,10 +4,10 @@ The Elpis API currently supports only single-session use - i.e. using multiple d
 transcribing multiple sound files simultaneously is not supported.
 
 All server responses are JSON objects of the form:
-```json
+```
 {
   "data": {
-    //...request specific response data...
+    ...request specific response data...
     }
   }, 
   "status": 200
