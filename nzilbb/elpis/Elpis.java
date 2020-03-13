@@ -11,6 +11,11 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import javax.json.JsonObject;
+import javax.json.JsonArray;
+import javax.json.JsonString;
+import nzilbb.elpis.http.*;
 
 /**
  * Client for accessing Elpis server functions programmatically.
@@ -43,6 +48,35 @@ public class Elpis {
     */
    public URL getBaseUrl() { return baseUrl; }
    
+   /**
+    * Whether to print detailed logging to System.out or not.
+    * @see #getVerbose()
+    * @see #setVerbose(boolean)
+    */
+   protected boolean verbose = false;
+   /**
+    * Getter for {@link #verbose}: Whether to print detailed logging to System.out or not.
+    * @return Whether to print detailed logging to System.out or not.
+    */
+   public boolean getVerbose() { return verbose; }
+   /**
+    * Setter for {@link #verbose}: Whether to print detailed logging to System.out or not.
+    * @param newVerbose Whether to print detailed logging to System.out or not.
+    */
+   public Elpis setVerbose(boolean newVerbose) { verbose = newVerbose; return this; }
+   
+   /**
+    * The last response received from the server.
+    * @see #getResponse()
+    * @see #setResponse(Response)
+    */
+   protected Response response;
+   /**
+    * Getter for {@link #response}: The last response received from the server.
+    * @return The last response received from the server.
+    */
+   public Response getResponse() { return response; }
+   
    // Methods:
    
    /**
@@ -62,6 +96,23 @@ public class Elpis {
       baseUrl = new URL(url);
    } // end of constructor
 
+   /**
+    * Constructs a URL for the given resource.
+    * @param resource
+    * @return A URL for the given resource.
+    * @throws StoreException If the URL is malformed.
+    */
+   protected URL makeUrl(String resource) throws IOException {
+      try
+      {
+         return new URL(baseUrl, resource);
+      }
+      catch(Throwable t)
+      {
+         throw new IOException("Could not construct request URL.", t);
+      }
+   } // end of editUrl()
+   
    // dataset functions
    
    /**
@@ -81,7 +132,14 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public List<String> datasetList() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestGet request = new HttpRequestGet(
+         makeUrl("dataset/list"))
+         .setHeader("Accept", "application/json");
+      if (verbose) System.out.println("datasetList -> " + request);
+      response = new Response(request.get(), verbose);
+      response.checkForErrors(); // throws a ResponseException on error
+      JsonArray list = response.getData().getJsonArray("list");
+      return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
    } // end of datasetList()
    
    /**
@@ -155,7 +213,14 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public List<String> pronDictList() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestGet request = new HttpRequestGet(
+         makeUrl("pron-dict/list"))
+         .setHeader("Accept", "application/json");
+      if (verbose) System.out.println("datasetList -> " + request);
+      response = new Response(request.get(), verbose);
+      response.checkForErrors(); // throws a ResponseException on error
+      JsonArray list = response.getData().getJsonArray("list");
+      return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
    } // end of pronDictList()
    
    /**
@@ -214,7 +279,14 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public List<String> modelList() throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestGet request = new HttpRequestGet(
+         makeUrl("model/list"))
+         .setHeader("Accept", "application/json");
+      if (verbose) System.out.println("datasetList -> " + request);
+      response = new Response(request.get(), verbose);
+      response.checkForErrors(); // throws a ResponseException on error
+      JsonArray list = response.getData().getJsonArray("list");
+      return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
    } // end of modelList()
    
    /**
