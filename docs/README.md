@@ -139,6 +139,8 @@ Upload transcript/audio files into the dataset.
  - **file** (file) : The file to upload (this parameter may be repeated), which may be a
      wav audio file or an ELAN .eaf transcript.
 
+**NB** The 'name' passed with the file must not be the full path of the file on the local system.
+
 Training requires pairs of audio/transcript (.wav/.eaf) files.
 
 **response:** A JSON object something like:  
