@@ -3,6 +3,9 @@
 The Elpis API currently supports only single-session use - i.e. using multiple datasets or
 transcribing multiple sound files simultaneously is not supported.
 
+All server requests that have a JSON-encoded body must set the `Content-Type` header to
+`application/json`. 
+
 All server responses are JSON objects of the form:
 ```
 {
