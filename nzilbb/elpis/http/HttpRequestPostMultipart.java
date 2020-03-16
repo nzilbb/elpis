@@ -148,6 +148,17 @@ public class HttpRequestPostMultipart {
    }
    
    /**
+    * Creates a new multipart POST HTTP request for a specified URL
+    *
+    * @param url the URL to send request to
+    * @throws IOException
+    */
+   public HttpRequestPostMultipart(URL url) throws IOException {
+      
+      this((HttpURLConnection)url.openConnection(), null);
+   }
+   
+   /**
     * Creates a new multipart POST HTTP request for a specified URL string
     *
     * @param urlString the string representation of the URL to send request to
@@ -302,7 +313,7 @@ public class HttpRequestPostMultipart {
    public HttpRequestPostMultipart setParameter(String name, File file) throws IOException {
       
       if (file == null) return this; //20100520 robert.fromont@canterbury.ac.nz 
-      setParameter(name, file.getPath(), new FileInputStream(file));
+      setParameter(name, file.getName(), new FileInputStream(file));
       return this;
    }
    
