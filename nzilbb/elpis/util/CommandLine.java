@@ -5,8 +5,10 @@
 //
 package nzilbb.elpis.util;
 
-import java.net.MalformedURLException;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Vector;
 import nzilbb.elpis.*;
 
 /**
@@ -30,17 +32,19 @@ public class CommandLine {
    /** Supported functions and parameters for validation */
    private static String[][] functions = {
       { "datasetList" },
-      { "datasetNew", "name"}, 
-      { "datasetLoad", "name"}, 
-      { "datasetSettings", "tier"}, 
-      { "datasetPrepare"}, 
-      { "pronDictList"}, 
-      { "pronDictNew", "name", "dataset_name"}, 
-      { "pronDictLoad", "name"}, 
-      { "modelList"}, 
-      { "modelNew", "name", "pron_dict_name"}, 
-      { "modelLoad", "name"}, 
-      { "modelSettings", "ngram"}
+      { "datasetNew", "<name>" }, 
+      { "datasetLoad", "<name>" }, 
+      { "datasetSettings", "<tier>" }, 
+      { "datasetFiles", "<wav-or-eaf-file> [<wav-or-eaf-file> ...]" }, 
+      { "datasetPrepare" }, 
+      { "pronDictList" }, 
+      { "pronDictNew", "<name>", "<dataset_name>" }, 
+      { "pronDictLoad", "<name>" }, 
+      { "modelList" }, 
+      { "modelNew", "<name>", "<pron_dict_name>" }, 
+      { "modelLoad", "<name>" }, 
+      { "modelSettings", "<ngram>" }, 
+      { "configReset" }
    };
 
    /** Command-line entrypoint. */
@@ -54,7 +58,7 @@ public class CommandLine {
             // is this the function?
             if (functions[f][0].equals(argv[1])) {
                if (argv.length - 1 < functions[f].length) {
-                  System.out.println("Not enough parameters for " + argv[1]);
+                  System.err.println("Not enough parameters for " + argv[1]);
                   printUsage(argv[1]);
                   return;
                } else {
@@ -73,6 +77,18 @@ public class CommandLine {
                elpis.datasetLoad(argv[2]);
             } else if (argv[1].equalsIgnoreCase("datasetSettings")){
                elpis.datasetSettings(argv[2]);
+            } else if (argv[1].equalsIgnoreCase("datasetFiles")){
+               // collect up the file arguments and validate them
+               Vector<File> files = new Vector<File>();
+               for (int f = 2; f < argv.length; f++) {
+                  File file = new File(argv[f]);
+                  if (file.exists()) {
+                     files.add(file);
+                  } else {
+                     throw new Exception("File doesn't exist: " + argv[f]);
+                  }
+               } // next argument
+               elpis.datasetFiles(files);
             } else if (argv[1].equalsIgnoreCase("pronDictList")){
                elpis.pronDictList();
             } else if (argv[1].equalsIgnoreCase("pronDictNew")){
@@ -90,6 +106,8 @@ public class CommandLine {
                elpis.modelSettings(ngram);
             } else if (argv[1].equalsIgnoreCase("datasetPrepare")){
                elpis.datasetPrepare();
+            } else if (argv[1].equalsIgnoreCase("configReset")){
+               elpis.configReset();
             } else {
                System.err.println("Invalid function: " + argv[1]);
                printUsage(null);
@@ -104,6 +122,8 @@ public class CommandLine {
             System.err.println("Communications Error: " + exception);
          } catch(NumberFormatException exception) {
             System.err.println(argv[1] + ": Could not parse number - " + exception.getMessage());
+         } catch(Exception exception) {
+            System.err.println(argv[1] + ": " + exception.getMessage());
          }
       }
    }
@@ -117,9 +137,22 @@ public class CommandLine {
             // is this the function?
             System.err.print("  " + functions[f][0]);
             for (int a = 1; a < functions[f].length; a++) {
-               System.err.print(" <" + functions[f][a] + ">");
+               System.err.print(functions[f][a]);
             }
             System.err.println();
+         } // next function
+      } else {
+         for (int f = 0; f < functions.length; f++) {
+            // is this the function?
+            if (functions[f][0].equals(function)) {
+               System.err.print("java -jar nzilbb.elpis.jar elpis-url ");
+               System.err.print(function);
+               for (int a = 1; a < functions[f].length; a++) {
+                  System.err.print(" " + functions[f][a]);
+               }
+               System.err.println();
+               break;
+            } // found the function definition
          } // next function
       }
    }

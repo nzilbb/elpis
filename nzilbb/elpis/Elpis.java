@@ -106,12 +106,9 @@ public class Elpis {
     * @throws StoreException If the URL is malformed.
     */
    protected URL makeUrl(String resource) throws IOException {
-      try
-      {
+      try {
          return new URL(baseUrl, resource);
-      }
-      catch(Throwable t)
-      {
+      } catch(Throwable t) {
          throw new IOException("Could not construct request URL.", t);
       }
    } // end of editUrl()
@@ -191,7 +188,19 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public List<String> datasetFiles(List<File> file) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPostMultipart request = new HttpRequestPostMultipart(
+         makeUrl("dataset/files"))
+         .setHeader("Accept", "application/json");
+      for (File f : file) {
+         request.setParameter("file", f);
+      }
+      if (verbose) System.out.println("datasetFiles -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
+      JsonArray files = response.getData().getJsonArray("files");
+      return files.stream()
+         .map(item->((JsonString)item).getString())
+         .collect(Collectors.toList());
    } // end of datasetFiles()
    
    /**
@@ -264,7 +273,9 @@ public class Elpis {
       response = new Response(request.get(), verbose);
       response.checkForErrors(); // throws a ElpisException on error
       JsonArray list = response.getData().getJsonArray("list");
-      return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
+      return list.stream()
+         .map(item->((JsonString)item).getString())
+         .collect(Collectors.toList());
    } // end of pronDictList()
    
    /**
