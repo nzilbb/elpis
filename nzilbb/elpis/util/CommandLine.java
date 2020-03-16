@@ -27,20 +27,67 @@ import nzilbb.elpis.*;
  */
 public class CommandLine {
 
+   /** Supported functions and parameters for validation */
+   private static String[][] functions = {
+      { "datasetList" },
+      { "datasetNew", "name"}, 
+      { "datasetLoad", "name"}, 
+      { "datasetSettings", "tier"}, 
+      { "datasetPrepare"}, 
+      { "pronDictList"}, 
+      { "pronDictNew", "name", "dataset_name"}, 
+      { "pronDictLoad", "name"}, 
+      { "modelList"}, 
+      { "modelNew", "name", "pron_dict_name"}, 
+      { "modelLoad", "name"}, 
+      { "modelSettings", "ngram"}
+   };
+
    /** Command-line entrypoint. */
    public static void main(String argv[]) {
       if (argv.length < 2) {
          printUsage(null);
          return;
       } else {
+         // validate parameters
+         for (int f = 0; f < functions.length; f++) {
+            // is this the function?
+            if (functions[f][0].equals(argv[1])) {
+               if (argv.length - 1 < functions[f].length) {
+                  System.out.println("Not enough parameters for " + argv[1]);
+                  printUsage(argv[1]);
+                  return;
+               } else {
+                  break;
+               }
+            } // found the function definition
+         } // next function
          try {
             Elpis elpis = new Elpis(argv[0]);
+            // elpis.setVerbose(true);
             if (argv[1].equalsIgnoreCase("datasetList")){
                elpis.datasetList();
+            } else if (argv[1].equalsIgnoreCase("datasetNew")){
+               elpis.datasetNew(argv[2]);
+            } else if (argv[1].equalsIgnoreCase("datasetLoad")){
+               elpis.datasetLoad(argv[2]);
+            } else if (argv[1].equalsIgnoreCase("datasetSettings")){
+               elpis.datasetSettings(argv[2]);
             } else if (argv[1].equalsIgnoreCase("pronDictList")){
                elpis.pronDictList();
+            } else if (argv[1].equalsIgnoreCase("pronDictNew")){
+               elpis.pronDictNew(argv[2], argv[3]);
+            } else if (argv[1].equalsIgnoreCase("pronDictLoad")){
+               elpis.pronDictLoad(argv[2]);
             } else if (argv[1].equalsIgnoreCase("modelList")){
                elpis.modelList();
+            } else if (argv[1].equalsIgnoreCase("modelNew")){
+               elpis.modelNew(argv[2], argv[3]);
+            } else if (argv[1].equalsIgnoreCase("modelLoad")){
+               elpis.modelLoad(argv[2]);
+            } else if (argv[1].equalsIgnoreCase("modelSettings")){
+               int ngram = Integer.parseInt(argv[2]);
+               elpis.modelSettings(ngram);
             } else if (argv[1].equalsIgnoreCase("datasetPrepare")){
                elpis.datasetPrepare();
             } else {
@@ -55,15 +102,26 @@ public class CommandLine {
             System.err.println("Error: " + exception);
          } catch(IOException exception) {
             System.err.println("Communications Error: " + exception);
+         } catch(NumberFormatException exception) {
+            System.err.println(argv[1] + ": Could not parse number - " + exception.getMessage());
          }
       }
    }
 
    private static void printUsage(String function) {
       System.err.println("Usage:");
-      System.err.println("java -jar nzilbb.elpis.jar elpis-url function [args...]");
-      System.err.println("functions:");
-      System.err.println("  datasetList");
+      if (function == null) {
+         System.err.println("java -jar nzilbb.elpis.jar elpis-url function [args...]");
+         System.err.println("functions:");
+         for (int f = 0; f < functions.length; f++) {
+            // is this the function?
+            System.err.print("  " + functions[f][0]);
+            for (int a = 1; a < functions[f].length; a++) {
+               System.err.print(" <" + functions[f][a] + ">");
+            }
+            System.err.println();
+         } // next function
+      }
    }
 
 } // end of class CommandLine

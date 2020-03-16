@@ -125,7 +125,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void datasetNew(String name) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("dataset/new"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("name", name);
+      if (verbose) System.out.println("datasetNew -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of datasetNew()
    
    /**
@@ -152,7 +158,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void datasetLoad(String name) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("dataset/load"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("name", name);
+      if (verbose) System.out.println("datasetLoad -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of datasetLoad()
    
    /**
@@ -162,7 +174,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void datasetSettings(String tier) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("dataset/settings"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("tier", tier);
+      if (verbose) System.out.println("datasetSettings -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of datasetSettings()
    
    /**
@@ -185,7 +203,7 @@ public class Elpis {
    public Map<String,Integer> datasetPrepare() throws IOException, ElpisException {
       HttpRequestPost request = new HttpRequestPost(
          makeUrl("dataset/prepare"))
-         .setHeader("Accept", "dataset/prepare");
+         .setHeader("Accept", "application/json");
       if (verbose) System.out.println("datasetPrepare -> " + request);
       response = new Response(request.post(), verbose);
       response.checkForErrors(); // throws a ElpisException on error
@@ -206,7 +224,14 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void pronDictNew(String name, String datasetName) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("pron-dict/new"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("name", name)
+         .setJsonParameter("dataset_name", datasetName);
+      if (verbose) System.out.println("pronDictNew -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of pronDictNew()
    
    /**
@@ -216,7 +241,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void pronDictLoad(String name) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("pron-dict/load"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("name", name);
+      if (verbose) System.out.println("pronDictLoad -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of pronDictNew()
    
    /**
@@ -311,7 +342,14 @@ public class Elpis {
     */
    public void modelNew(String name, String pronDictName)
       throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("model/new"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("name", name)
+         .setJsonParameter("pron_dict_name", pronDictName);
+      if (verbose) System.out.println("modelNew -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of modelNew()
    
    /**
@@ -321,7 +359,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void modelLoad(String name) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("model/load"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("name", name);
+      if (verbose) System.out.println("modelLoad -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of modelLoad()
    
    /**
@@ -332,7 +376,13 @@ public class Elpis {
     * @throws ElpisException if the server returns an error.
     */
    public void modelSettings(int ngram) throws IOException, ElpisException {
-      throw new ElpisException("Not implemented");
+      HttpRequestPost request = new HttpRequestPost(
+         makeUrl("model/settings"))
+         .setHeader("Accept", "application/json")
+         .setJsonParameter("ngram", ""+ngram);
+      if (verbose) System.out.println("modelSettings -> " + request);
+      response = new Response(request.post(), verbose);
+      response.checkForErrors(); // throws a ElpisException on error
    } // end of modelSettings()      
    
    /**
@@ -452,7 +502,7 @@ public class Elpis {
    public void configReset() throws IOException, ElpisException {
       HttpRequestPost request = new HttpRequestPost(
          makeUrl("config/reset"))
-         .setHeader("Accept", "dataset/prepare");
+         .setHeader("Accept", "application/json");
       if (verbose) System.out.println("datasetPrepare -> " + request);
       response = new Response(request.post(), verbose);
       response.checkForErrors(); // throws a ElpisException on error
