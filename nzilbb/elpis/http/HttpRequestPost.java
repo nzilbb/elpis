@@ -19,6 +19,8 @@ import java.util.Random;
 import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.util.Iterator;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 /**
  * POST HTTP request.
@@ -33,6 +35,9 @@ public class HttpRequestPost {
    
    /** Parameters so far flag */
    protected boolean bNoParametersYet = true;
+
+   /** JSON body */
+   protected Map<String,String> jsonBody = null;
 
    private String url = "?"; 
    private StringBuilder body = new StringBuilder(); 
@@ -212,6 +217,23 @@ public class HttpRequestPost {
    }
    
    /**
+    * adds a string parameter to the JSON body object.
+    * @param name parameter name
+    * @param value parameter value
+    * @throws IOException
+    */
+   public HttpRequestPost setJsonParameter(String name, String value) throws IOException {
+      
+      if (value == null) return this;
+      if (jsonBody == null) {
+         setHeader("Content-Type", "application/json;charset=utf-8");
+         jsonBody = new HashMap<String,String>();
+      }
+      jsonBody.put(name, value);
+      return this;
+   }
+   
+   /**
     * adds a parameter to the request; if the parameter is a File, the file is uploaded,
     * otherwise the string value of the parameter is passed in the request 
     * @param name parameter name
@@ -272,12 +294,32 @@ public class HttpRequestPost {
    }
    
    /**
+    * Generates the JSON body.
+    * @return A JSON string.
+    */
+   public String generateJson()
+   {
+      if (jsonBody != null) {
+         JsonObjectBuilder builder = Json.createObjectBuilder();
+         for (String parameter : jsonBody.keySet()) {
+            builder.add(parameter, jsonBody.get(parameter));
+         }
+         return builder.build().toString();
+      } else {       
+         return null;
+      }
+   } // end of generateJson()
+   
+   /**
     * posts the requests to the server, with all the cookies and parameters that were added
     * @return input stream with the server response
     * @throws IOException
     */
    public HttpURLConnection post() throws IOException {
 
+      if (jsonBody != null) {
+         write(generateJson());
+      }
       if (os != null) os.close();
       return connection;
    }
@@ -535,6 +577,10 @@ public class HttpRequestPost {
     * @return A String representation of the request, for logging.
     */
    public String toString() {
-      return "POST " + url + " : " + body;
+      if (jsonBody != null) {
+         return "POST " + url + " : " + generateJson();
+      } else {
+         return "POST " + url + " : " + body;
+      }
    } // end of toString()
 }
