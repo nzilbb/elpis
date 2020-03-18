@@ -8,6 +8,7 @@ package nzilbb.elpis.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.Vector;
 import nzilbb.elpis.*;
 
@@ -39,16 +40,35 @@ public class CommandLine {
       { "datasetPrepare" }, 
       { "pronDictList" }, 
       { "pronDictNew", "<name>", "<dataset_name>" }, 
-      { "pronDictLoad", "<name>" }, 
+      { "pronDictLoad", "<name>" },
+      { "pronDictL2S", "<file>" },
+      { "pronDictGenerateLexicon" },
+      { "pronDictSaveLexicon", "<file>" },
       { "modelList" }, 
       { "modelNew", "<name>", "<pron_dict_name>" }, 
       { "modelLoad", "<name>" }, 
-      { "modelSettings", "<ngram>" }, 
+      { "modelSettings", "<ngram>" },
+      { "modelTrain" },
+      { "modelStatus" },
+      { "modelResults" },
+      { "transcriptionNew", "<file>" },
+      { "transcriptionTranscribe" },
+      { "transcriptionStatus" },
+      { "transcriptionText" },
+      { "transcriptionElan" },
       { "configReset" }
    };
 
    /** Command-line entrypoint. */
    public static void main(String argv[]) {
+      boolean verbose = false;
+      if (argv.length > 0 && argv[0].equals("-v")) {
+         verbose = true;
+         argv = Arrays.copyOfRange(argv, 1, argv.length);
+         System.out.println("New args:");
+         for (String a : argv) System.out.println(a);
+      }
+      
       if (argv.length < 2) {
          printUsage(null);
          return;
@@ -67,7 +87,8 @@ public class CommandLine {
             } // found the function definition
          } // next function
          try {
-            Elpis elpis = new Elpis(argv[0]);
+            Elpis elpis = new Elpis(argv[0])
+               .setVerbose(verbose);
             // elpis.setVerbose(true);
             if (argv[1].equalsIgnoreCase("datasetList")){
                elpis.datasetList();
@@ -89,12 +110,30 @@ public class CommandLine {
                   }
                } // next argument
                elpis.datasetFiles(files);
+            } else if (argv[1].equalsIgnoreCase("datasetPrepare")){
+               elpis.datasetPrepare();
             } else if (argv[1].equalsIgnoreCase("pronDictList")){
                elpis.pronDictList();
             } else if (argv[1].equalsIgnoreCase("pronDictNew")){
                elpis.pronDictNew(argv[2], argv[3]);
             } else if (argv[1].equalsIgnoreCase("pronDictLoad")){
                elpis.pronDictLoad(argv[2]);
+            } else if (argv[1].equalsIgnoreCase("pronDictL2S")){
+               // validate file
+               File file = new File(argv[2]);
+               if (!file.exists()) {
+                  throw new Exception("File doesn't exist: " + argv[2]);
+               }
+               elpis.pronDictL2S(file);
+            } else if (argv[1].equalsIgnoreCase("pronDictGenerateLexicon")){
+               elpis.pronDictGenerateLexicon();
+            } else if (argv[1].equalsIgnoreCase("pronDictSaveLexicon")){
+               // validate file
+               File file = new File(argv[2]);
+               if (!file.exists()) {
+                  throw new Exception("File doesn't exist: " + argv[2]);
+               }
+               elpis.pronDictSaveLexicon(file);
             } else if (argv[1].equalsIgnoreCase("modelList")){
                elpis.modelList();
             } else if (argv[1].equalsIgnoreCase("modelNew")){
@@ -104,8 +143,29 @@ public class CommandLine {
             } else if (argv[1].equalsIgnoreCase("modelSettings")){
                int ngram = Integer.parseInt(argv[2]);
                elpis.modelSettings(ngram);
-            } else if (argv[1].equalsIgnoreCase("datasetPrepare")){
-               elpis.datasetPrepare();
+            } else if (argv[1].equalsIgnoreCase("modelTrain")){
+               elpis.modelTrain();
+            } else if (argv[1].equalsIgnoreCase("modelStatus")){
+               elpis.modelStatus();
+            } else if (argv[1].equalsIgnoreCase("modelResults")){
+               elpis.modelResults();
+            } else if (argv[1].equalsIgnoreCase("transcriptionNew")){
+               // validate file
+               File file = new File(argv[2]);
+               if (!file.exists()) {
+                  throw new Exception("File doesn't exist: " + argv[2]);
+               }
+               elpis.transcriptionNew(file);
+            } else if (argv[1].equalsIgnoreCase("transcriptionTranscribe")){
+               elpis.transcriptionTranscribe();
+            } else if (argv[1].equalsIgnoreCase("transcriptionStatus")){
+               elpis.transcriptionStatus();
+            } else if (argv[1].equalsIgnoreCase("transcriptionText")){
+               elpis.transcriptionText();
+            } else if (argv[1].equalsIgnoreCase("transcriptionElan")){
+               File eaf = elpis.transcriptionElan();
+               if (verbose) System.err.println("ELAN file: " + eaf.getPath());
+               eaf.delete();
             } else if (argv[1].equalsIgnoreCase("configReset")){
                elpis.configReset();
             } else {
@@ -124,6 +184,8 @@ public class CommandLine {
             System.err.println(argv[1] + ": Could not parse number - " + exception.getMessage());
          } catch(Exception exception) {
             System.err.println(argv[1] + ": " + exception.getMessage());
+            if (!exception.getClass().equals(Exception.class))
+            exception.printStackTrace(System.err);
          }
       }
    }
@@ -131,13 +193,14 @@ public class CommandLine {
    private static void printUsage(String function) {
       System.err.println("Usage:");
       if (function == null) {
-         System.err.println("java -jar nzilbb.elpis.jar elpis-url function [args...]");
+         System.err.println("java -jar nzilbb.elpis.jar [-v] elpis-url function [args...]");
+         System.err.println(" -v : verbose output");
          System.err.println("functions:");
          for (int f = 0; f < functions.length; f++) {
             // is this the function?
             System.err.print("  " + functions[f][0]);
             for (int a = 1; a < functions[f].length; a++) {
-               System.err.print(functions[f][a]);
+               System.err.print(" " + functions[f][a]);
             }
             System.err.println();
          } // next function
@@ -145,12 +208,13 @@ public class CommandLine {
          for (int f = 0; f < functions.length; f++) {
             // is this the function?
             if (functions[f][0].equals(function)) {
-               System.err.print("java -jar nzilbb.elpis.jar elpis-url ");
+               System.err.print("java -jar nzilbb.elpis.jar [-v] elpis-url ");
                System.err.print(function);
                for (int a = 1; a < functions[f].length; a++) {
                   System.err.print(" " + functions[f][a]);
                }
                System.err.println();
+               System.err.println(" -v : verbose output");
                break;
             } // found the function definition
          } // next function
