@@ -65,7 +65,7 @@ public class ElpisException extends Exception {
     */
    static private String GenerateMessage(Response response) {
       
-      if (response.getStatus() != 200) {
+      if (response.getExpectJson() && response.getStatus() != 200) {
          if (response.getMessage() != null) {
             return response.getMessage() + " ("+response.getMessage()+")";
          } else {         

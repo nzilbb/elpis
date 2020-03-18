@@ -96,6 +96,24 @@ public class Response {
     */
    public boolean getVerbose() { return verbose; }
    
+   /**
+    * Whether the response content should be parsed as a JSON object.
+    * @see #getExpectJson()
+    * @see #setExpectJson(boolean)
+    */
+   protected boolean expectJson = true;
+   /**
+    * Getter for {@link #expectJson}: Whether the response content should be parsed as a
+    * JSON object. 
+    * @return Whether the response content should be parsed as a JSON object.
+    */
+   public boolean getExpectJson() { return expectJson; }
+   /**
+    * Setter for {@link #expectJson}: Whether the response content should be parsed as a
+    * JSON object. 
+    * @param newExpectJson Whether the response content should be parsed as a JSON object.
+    */
+   public Response setExpectJson(boolean newExpectJson) { expectJson = newExpectJson; return this; }
    // Methods:
    
    /**
@@ -128,7 +146,19 @@ public class Response {
     * @param verbose The verbosity setting to use.
     */
    public Response(HttpURLConnection connection, boolean verbose) throws IOException {
+      this(connection, verbose, true);
+   }
+   
+   /**
+    * Constructor from HttpURLConnection.
+    * @param connection The connection to read from.
+    * @param verbose The verbosity setting to use.
+    * @param expectJson Whether the response content should be parsed as a JSON object.
+    */
+   public Response(HttpURLConnection connection, boolean verbose, boolean expectJson)
+      throws IOException {
       
+      this.expectJson = expectJson;
       this.verbose = verbose;
 
       httpStatus = connection.getResponseCode();
@@ -179,7 +209,7 @@ public class Response {
       
       raw = text;
       if (verbose) System.out.println("raw: " + raw);
-      if (raw != null && raw.length() > 0) {
+      if (raw != null && raw.length() > 0 && expectJson) {
          try {
             
             JsonObject json = Json.createReader(new StringReader(raw)).readObject();
@@ -214,8 +244,9 @@ public class Response {
     * @return A reference to this object,
     * @throws StoreException
     */
-   public Response checkForErrors() throws ElpisException {      
-      if (status != 200 || (httpStatus > 0 && httpStatus != HttpURLConnection.HTTP_OK)) {
+   public Response checkForErrors() throws ElpisException {
+      if ((expectJson && status != 200)
+          || (httpStatus > 0 && httpStatus != HttpURLConnection.HTTP_OK)) {
          throw new ElpisException(this);
       }
       return this;
