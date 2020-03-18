@@ -145,6 +145,7 @@ public class HttpRequestPostMultipart {
    public HttpRequestPostMultipart(URL url, String sAuthorization) throws IOException {
       
       this((HttpURLConnection)url.openConnection(), sAuthorization);
+      this.url = url.toString(); 
    }
    
    /**
@@ -156,6 +157,7 @@ public class HttpRequestPostMultipart {
    public HttpRequestPostMultipart(URL url) throws IOException {
       
       this((HttpURLConnection)url.openConnection(), null);
+      this.url = url.toString(); 
    }
    
    /**

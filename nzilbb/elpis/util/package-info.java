@@ -5,7 +5,8 @@
  * ad-hoc API requests: e.g.
  * <p><tt>java -jar nzilbb.elpis.jar http://0.0.0.0:5000 <b>datasetList</b></tt>
  * <p> &hellip; might print:
- * <pre>{
+ * <pre>
+ * {
  *   "data": {
  *     "list": [
  *       "ds"

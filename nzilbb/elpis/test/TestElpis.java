@@ -63,8 +63,6 @@ public class TestElpis {
 
       elpis.datasetLoad("unit-test-ds");      
 
-      elpis.datasetSettings("test");      
-
       // upload transcribed files
       
       Vector<File> dataset = new Vector<File>();

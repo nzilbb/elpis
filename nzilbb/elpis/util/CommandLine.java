@@ -14,11 +14,12 @@ import nzilbb.elpis.*;
 
 /**
  * Provides access to the Elpis API from the command line.
- * <p>This is the <q>main class</q> for <i>nzilbb.elpis.jar</i>, so it's easy to invoke
+ * <p> This is the <q>main class</q> for <i>nzilbb.elpis.jar</i>, so it's easy to invoke
  * from the command line for performing ad-hoc API requests: e.g. 
  * <p><tt>java -jar nzilbb.elpis.jar http://0.0.0.0:5000 <b>datasetList</b></tt>
  * <p> &hellip; might print:
- * <pre>{
+ * <pre>
+ * {
  *   "data": {
  *     "list": [
  *       "ds"
@@ -26,6 +27,39 @@ import nzilbb.elpis.*;
  *   }, 
  *   "status": 200
  * }</pre>
+ * <p> You can use the <tt>-v</tt> switch to produce verbose output, e.g.
+ * <p><tt>java -jar nzilbb.elpis.jar -v http://0.0.0.0:5000 <b>datasetList</b></tt>
+ * <p> <em> NB </em> For the command line program to work, <tt>javax.json.jar</tt> must be
+ * on the class-path or in the same directory as <i>nzilbb.elpis.jar</i>. This can be downloaded from 
+ * <a href="https://github.com/nzilbb/elpis-java/blob/master/lib/javax.json.jar?raw=true">here</a>.
+ * <p> A full training/transcription pipeline would look something like this:
+ * <pre>
+ * URL=http://0.0.0.0:5000
+ * java -jar nzilbb.elpis.jar $URL datasetNew ds
+ * java -jar nzilbb.elpis.jar $URL datasetSettings Phrase
+ * java -jar nzilbb.elpis.jar $URL datasetFiles transcribed/*.wav transcribed/*.eaf
+ * java -jar nzilbb.elpis.jar $URL datasetPrepare
+ * java -jar nzilbb.elpis.jar $URL pronDictNew pd ds
+ * java -jar nzilbb.elpis.jar $URL pronDictL2S letter_to_sound.txt
+ * java -jar nzilbb.elpis.jar $URL pronDictGenerateLexicon
+ * java -jar nzilbb.elpis.jar $URL modelNew m pd
+ * java -jar nzilbb.elpis.jar $URL modelSettings 2
+ * java -jar nzilbb.elpis.jar $URL modelTrain</pre>
+ * <p> Then run:
+ * <pre>
+ * java -jar nzilbb.elpis.jar $URL modelStatus</pre>
+ * <p> &hellip; until the status is "trained". Then:
+ * <pre>
+ * java -jar nzilbb.elpis.jar $URL modelResults
+ * java -jar nzilbb.elpis.jar $URL transcriptionNew untranscribed/audio.wav
+ * java -jar nzilbb.elpis.jar $URL transcriptionTranscribe</pre>
+ * <p> Then run:
+ * <pre>
+ * java -jar nzilbb.elpis.jar $URL transcriptionStatus</pre>
+ * <p> &hellip; until the status is "transcribed". Then:
+ * <pre>
+ * java -jar nzilbb.elpis.jar $URL transcriptionText
+ * java -jar nzilbb.elpis.jar $URL transcriptionElan &gt; untranscribed/audio.eaf</pre>
  * @author Robert Fromont robert@fromont.net.nz
  */
 public class CommandLine {

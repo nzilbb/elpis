@@ -39,9 +39,65 @@ import nzilbb.elpis.http.*;
  *  <li>transcription&hellip; &mdash; automatic transcription of new recordings</li>
  *  <li>config&hellip;        &mdash; clean up</li>
  * </ol>
+ * <p> A full training sessions would look something like:
+ * <pre>
+ * Elpis elpis = new Elpis(elpisUrl);
+ *
+ * // create dataset
+ * elpis.datasetNew("ds");
+ * elpis.datasetSettings(getTranscriptTierName());
+ *
+ * // upload transcribed files      
+ * Vector&lt;File&gt; dataset = getTrainigFiles();
+ * elpis.datasetFiles(dataset);
+ * elpis.datasetSettings("test");
+ * elpis.datasetPrepare();
+ * 
+ * // pronunciation dictionary 
+ * elpis.pronDictNew("pd", "ds");
+ * elpis.pronDictL2S(getLetterToSoundFile());
+ * Map&lt;String,String&gt; lexicon = elpis.pronDictGenerateLexicon();
+ * // update lexicon maybe...
+ * // ...and then save it
+ * elpis.pronDictSaveLexicon(lexicon);
+ *
+ * // model training
+ * elpis.modelNew("m", "pd"); 
+ * elpis.modelSettings(getNGramSetting());
+ * String status = elpis.modelTrain();
+ * while(status.equals("training")) {
+ *   Thread.sleep(1000);
+ *   status = elpis.modelStatus();
+ * }
+ * System.out.println(elpis.modelResults().toString());
+ *
+ * // transcription
+ *
+ * elpis.transcriptionNew(getRecordingToTranscribe());
+ * status = elpis.transcriptionTranscribe();
+ * while(status.equals("transcribing")) {
+ *   Thread.sleep(1000);
+ *   status = elpis.transcriptionStatus();
+ * }
+ *
+ * String transcript = elpis.transcriptionText();
+ * System.out.println(transcript);
+ *      
+ * File eaf = elpis.transcriptionElan();
+ * try {
+ *   // do something with the ELAN file...
+ * } finally {
+ *   eaf.delete();
+ * }
+ * 
+ * // tidy up 
+ * elpis.configReset();
+ * </pre> 
  * @author Robert Fromont robert@fromont.net.nz
  */
 public class Elpis {
+
+   // TODO: validate returned JSON - e.g. check the tier name returned is the same as the one sent 
    
    // Attributes:
    
@@ -134,6 +190,7 @@ public class Elpis {
     */
    public void datasetNew(String name) throws IOException, ElpisException {
       HttpRequestPost request = new HttpRequestPost(
+
          makeUrl("dataset/new"))
          .setHeader("Accept", "application/json")
          .setJsonParameter("name", name);
@@ -437,7 +494,9 @@ public class Elpis {
       response = new Response(request.get(), verbose);
       response.checkForErrors(); // throws a ElpisException on error
       JsonArray list = response.getData().getJsonArray("list");
-      return list.stream().map(item->((JsonString)item).getString()).collect(Collectors.toList());
+      return list.stream()
+         .map(item->((JsonObject)item).getString("name"))
+         .collect(Collectors.toList());
    } // end of modelList()
    
    /**
